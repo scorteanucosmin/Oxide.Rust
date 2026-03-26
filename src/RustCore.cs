@@ -83,22 +83,22 @@ namespace Oxide.Game.Rust
             RemoteLogger.SetTag("game version", Server.Version);
 
             // Add core plugin commands
-            AddCovalenceCommand(new[] { "oxide.plugins", "o.plugins", "plugins" }, "PluginsCommand", "oxide.plugins");
-            AddCovalenceCommand(new[] { "oxide.load", "o.load", "plugin.load" }, "LoadCommand", "oxide.load");
-            AddCovalenceCommand(new[] { "oxide.reload", "o.reload", "plugin.reload" }, "ReloadCommand", "oxide.reload");
-            AddCovalenceCommand(new[] { "oxide.unload", "o.unload", "plugin.unload" }, "UnloadCommand", "oxide.unload");
+            AddCovalenceCommand(["oxide.plugins", "o.plugins", "plugins"], nameof(PluginsCommand), "oxide.plugins");
+            AddCovalenceCommand(["oxide.load", "o.load", "plugin.load"], nameof(LoadCommand), "oxide.load");
+            AddCovalenceCommand(["oxide.reload", "o.reload", "plugin.reload"], nameof(ReloadCommand), "oxide.reload");
+            AddCovalenceCommand(["oxide.unload", "o.unload", "plugin.unload"], nameof(UnloadCommand), "oxide.unload");
 
             // Add core permission commands
-            AddCovalenceCommand(new[] { "oxide.grant", "o.grant", "perm.grant" }, "GrantCommand", "oxide.grant");
-            AddCovalenceCommand(new[] { "oxide.group", "o.group", "perm.group" }, "GroupCommand", "oxide.group");
-            AddCovalenceCommand(new[] { "oxide.revoke", "o.revoke", "perm.revoke" }, "RevokeCommand", "oxide.revoke");
-            AddCovalenceCommand(new[] { "oxide.show", "o.show", "perm.show" }, "ShowCommand", "oxide.show");
-            AddCovalenceCommand(new[] { "oxide.usergroup", "o.usergroup", "perm.usergroup" }, "UserGroupCommand", "oxide.usergroup");
+            AddCovalenceCommand(["oxide.grant", "o.grant", "perm.grant"], nameof(GrantCommand), "oxide.grant");
+            AddCovalenceCommand(["oxide.group", "o.group", "perm.group"], nameof(GroupCommand), "oxide.group");
+            AddCovalenceCommand(["oxide.revoke", "o.revoke", "perm.revoke"], nameof(RevokeCommand), "oxide.revoke");
+            AddCovalenceCommand(["oxide.show", "o.show", "perm.show"], nameof(ShowCommand), "oxide.show");
+            AddCovalenceCommand(["oxide.usergroup", "o.usergroup", "perm.usergroup"], nameof(UserGroupCommand), "oxide.usergroup");
 
             // Add core misc commands
-            AddCovalenceCommand(new[] { "oxide.lang", "o.lang", "lang" }, "LangCommand");
-            AddCovalenceCommand(new[] { "oxide.save", "o.save" }, "SaveCommand");
-            AddCovalenceCommand(new[] { "oxide.version", "o.version" }, "VersionCommand");
+            AddCovalenceCommand(["oxide.lang", "o.lang", "lang"], nameof(LangCommand));
+            AddCovalenceCommand(["oxide.save", "o.save"], nameof(SaveCommand));
+            AddCovalenceCommand(["oxide.version", "o.version"], nameof(VersionCommand));
 
             // Register messages for localization
             foreach (KeyValuePair<string, Dictionary<string, string>> language in Localization.languages)

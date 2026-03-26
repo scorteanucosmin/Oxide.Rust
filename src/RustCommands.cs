@@ -296,40 +296,95 @@ namespace Oxide.Game.Rust
         /// <param name="command"></param>
         /// <param name="args"></param>
         [HookMethod("PluginsCommand")]
-        private void PluginsCommand(IPlayer player)
+        private void PluginsCommand(IPlayer player, string command, string[] args)
         {
+            // TODO: This should be re-written entirely but it should do it for now
             Plugin[] loadedPlugins = pluginManager.GetPlugins().Where(pl => !pl.IsCorePlugin).ToArray();
-            HashSet<string> loadedPluginNames = new HashSet<string>(loadedPlugins.Select(pl => pl.Name));
-            Dictionary<string, string> unloadedPluginErrors = new Dictionary<string, string>();
-            foreach (PluginLoader loader in Interface.Oxide.GetPluginLoaders())
+            HashSet<string> loadedPluginNames = new(loadedPlugins.Select(pl => pl.Name));
+            Dictionary<string, string> unloadedPluginErrors = new();
+
+            bool lookup = false;
+            if (args is { Length: 1 })
             {
-                foreach (string name in loader.ScanDirectory(Interface.Oxide.PluginDirectory).Except(loadedPluginNames))
+                lookup = true;
+                string pluginName = args[0];
+
+                foreach (PluginLoader loader in Interface.Oxide.GetPluginLoaders())
                 {
-                    if (loader.PluginErrors.TryGetValue(name, out HashSet<string> errors))
+                    foreach (string name in loader.ScanDirectory(Interface.Oxide.PluginDirectory).Except(loadedPluginNames))
                     {
-                        unloadedPluginErrors[name] = errors.JoinValues(Environment.NewLine); // TODO: Localization
+                        if (name != pluginName)
+                        {
+                            continue;
+                        }
+                    
+                        if (loader.PluginErrors.TryGetValue(name, out HashSet<string> errors))
+                        {
+                            unloadedPluginErrors[name] = errors.JoinValues(Environment.NewLine, true); // TODO: Localization
+                        }
+                        else
+                        {
+                            unloadedPluginErrors[name] = "Unloaded"; // TODO: Localization
+                        }
                     }
-                    else
+                }
+            }
+            else
+            {
+                foreach (PluginLoader loader in Interface.Oxide.GetPluginLoaders())
+                {
+                    foreach (string name in loader.ScanDirectory(Interface.Oxide.PluginDirectory).Except(loadedPluginNames))
                     {
-                        unloadedPluginErrors[name] = "Unloaded"; // TODO: Localization
+                        if (unloadedPluginErrors.ContainsKey(name))
+                        {
+                            continue;
+                        }
+                    
+                        if (loader.PluginErrors.TryGetValue(name, out HashSet<string> errors))
+                        {
+                            unloadedPluginErrors[name] = errors.ElementAt(0); // TODO: Localization
+                        }
+                        else
+                        {
+                            unloadedPluginErrors[name] = "Unloaded"; // TODO: Localization
+                        }
                     }
                 }
             }
 
-            int totalPluginCount = loadedPlugins.Length + unloadedPluginErrors.Count;
-            if (totalPluginCount < 1)
+            string output;
+            int number = 1;
+            if (!lookup)
+            {
+                int totalPluginCount = loadedPlugins.Length + unloadedPluginErrors.Count;
+                if (totalPluginCount < 1)
+                {
+                    player.Reply(lang.GetMessage("NoPluginsFound", this, player.Id));
+                    return;
+                }
+
+                output = $"Listing {loadedPlugins.Length + unloadedPluginErrors.Count} plugins:"; // TODO: Localization
+                foreach (Plugin plugin in loadedPlugins.Where(p => p.Filename != null))
+                {
+                    output += $"\n  {number++:00} \"{plugin.Title}\" ({plugin.Version}) by {plugin.Author} ({plugin.TotalHookTime:0.00}s / {FormatBytes(plugin.TotalHookMemory)}) - {plugin.Filename.Basename()}";
+                }
+
+                foreach (string pluginName in unloadedPluginErrors.Keys)
+                {
+                    output += $"\n  {number++:00} {pluginName} - {unloadedPluginErrors[pluginName]}";
+                }
+                
+                player.Reply(output);
+                return;
+            }
+
+            if (unloadedPluginErrors.Count == 0)
             {
                 player.Reply(lang.GetMessage("NoPluginsFound", this, player.Id));
                 return;
             }
-
-            string output = $"Listing {loadedPlugins.Length + unloadedPluginErrors.Count} plugins:"; // TODO: Localization
-            int number = 1;
-            foreach (Plugin plugin in loadedPlugins.Where(p => p.Filename != null))
-            {
-                output += $"\n  {number++:00} \"{plugin.Title}\" ({plugin.Version}) by {plugin.Author} ({plugin.TotalHookTime:0.00}s / {FormatBytes(plugin.TotalHookMemory)}) - {plugin.Filename.Basename()}";
-            }
-
+            
+            output = "Listing 1 plugin:";
             foreach (string pluginName in unloadedPluginErrors.Keys)
             {
                 output += $"\n  {number++:00} {pluginName} - {unloadedPluginErrors[pluginName]}";
@@ -338,25 +393,13 @@ namespace Oxide.Game.Rust
             player.Reply(output);
         }
 
-        private static string FormatBytes(long bytes)
+        private static string FormatBytes(long bytes) => bytes switch
         {
-            if (bytes < 1024)
-            {
-                return $"{bytes:0} B";
-            }
-
-            if (bytes < 1048576)
-            {
-                return $"{bytes / 1024:0} KB";
-            }
-
-            if (bytes < 1073741824)
-            {
-                return $"{bytes / 1048576:0} MB";
-            }
-
-            return $"{bytes / 1073741824:0} GB";
-        }
+            < 1024 => $"{bytes:0} B",
+            < 1048576 => $"{bytes / 1024:0} KB",
+            < 1073741824 => $"{bytes / 1048576:0} MB",
+            _ => $"{bytes / 1073741824:0} GB"
+        };
 
         #endregion Plugins Command
 
