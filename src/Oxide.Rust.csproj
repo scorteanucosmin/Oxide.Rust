@@ -27,12 +27,13 @@
   </PropertyGroup>
   <ItemGroup>
     <PackageReference Include="Oxide.References" Version="2.0.3810-develop" />
-    <PackageReference Include="Oxide.Common" Version="2.0.47-develop" />
+    <PackageReference Include="Oxide.Common" Version="3.2.1" />
     <PackageReference Include="Oxide.Core" Version="2.0.4152-develop" />
     <PackageReference Include="Oxide.CSharp" Version="2.0.4161-develop" />
     <PackageReference Include="Oxide.MySql" Version="2.0.3787-develop" />
     <PackageReference Include="Oxide.SQLite" Version="2.0.3810-develop" />
     <PackageReference Include="Oxide.Unity" Version="2.0.3781-develop" />
+    <PackageReference Include="RustReferences" Version="2.0.7783" />
     <Reference Include="Assembly-CSharp" />
     <Reference Include="Assembly-CSharp-firstpass" />
     <Reference Include="BoomlagoonJSON" />

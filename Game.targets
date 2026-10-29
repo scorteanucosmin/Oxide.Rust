@@ -5,7 +5,7 @@
     <TargetPlatform Condition="$(GamePlatform.Contains(';'))">$(GamePlatform.Split(';')[0])</TargetPlatform>
     <AssemblySearchPaths>$(AssemblySearchPaths);Dependencies;Dependencies\$(TargetPlatform)\$(ManagedDir)</AssemblySearchPaths>
   </PropertyGroup>
-  <Target Name="BeforeBuild">
+  <!--<Target Name="BeforeBuild">
     <PropertyGroup>
       <SteamCommand>pwsh &quot;..\Steam.ps1&quot;</SteamCommand>
       <PlatformArg Condition="'$(GamePlatform)' != ''">-platform $(GamePlatform.Split(';')[0])</PlatformArg>
@@ -18,7 +18,7 @@
     </PropertyGroup>
     <Message Text="Setting up environment for $(TargetPlatform)..." Importance="High" />
     <Exec Command="$(SteamCommand) -game_name $(GameName) -dotnet $(TargetFramework) -target_dir $(TargetDir) -managed_dir $(ManagedDir) $(PlatformArg) $(DeobfArg) $(AppIdArg) $(BranchArg) $(DepotArg) $(LoginArg) $(ReferencesOverrideArg)" />
-  </Target>
+  </Target>-->
   <Target Name="ChangeAliasesOfStrongNameAssemblies" BeforeTargets="FindReferenceAssembliesForReferences;ResolveReferences">
     <ItemGroup>
       <ReferencePath Condition="'%(FileName)' == 'Oxide.References'">
