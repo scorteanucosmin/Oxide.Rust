@@ -1,9 +1,8 @@
-<?xml version="1.0" encoding="utf-8"?>
-<Project>
-  <Import Project="Sdk.props" Sdk="Microsoft.NET.Sdk" />
+<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
     <Version>2.0.0</Version>
-    <GameName>Rust</GameName>
+    <AssemblyName>Oxide.Rust</AssemblyName>
+    <RootNamespace>Oxide.Game.Rust</RootNamespace>
     <Authors>Oxide Team and Contributors</Authors>
     <Copyright>(c) 2013-$([System.DateTime]::Now.Year) $(Authors)</Copyright>
     <Description>Rust extension for the Oxide modding framework</Description>
@@ -11,59 +10,48 @@
     <PackageIconUrl>icon.png</PackageIconUrl>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
     <PackageProjectUrl>$(RepositoryUrl)</PackageProjectUrl>
-    <TargetFramework>net48</TargetFramework>
-    <GeneratePackageOnBuild>True</GeneratePackageOnBuild>
-    <SteamAppId>258550</SteamAppId>
-    <SteamBranch>public</SteamBranch>
-    <SteamLogin>anonymous</SteamLogin>
-    <GamePlatform>windows;linux</GamePlatform>
-    <GameExe>RustDedicated.exe;RustDedicated</GameExe>
-    <ManagedDir>RustDedicated_Data/Managed</ManagedDir>
-    <NoWarn>NU1701</NoWarn>
-    <GitBranch></GitBranch>
-    <ReferencesOverride>regex:Managed/(.*).dll</ReferencesOverride>
-    <LangVersion>Latest</LangVersion>
     <Nullable>enable</Nullable>
   </PropertyGroup>
   <ItemGroup>
-    <PackageReference Include="Oxide.References" Version="2.0.3810-develop" />
-    <PackageReference Include="Oxide.Common" Version="3.2.1" />
-    <PackageReference Include="Oxide.Core" Version="2.0.4152-develop" />
-    <PackageReference Include="Oxide.CSharp" Version="2.0.4161-develop" />
-    <PackageReference Include="Oxide.MySql" Version="2.0.3787-develop" />
-    <PackageReference Include="Oxide.SQLite" Version="2.0.3810-develop" />
-    <PackageReference Include="Oxide.Unity" Version="2.0.3781-develop" />
-    <PackageReference Include="RustReferences" Version="2.0.7783" />
-    <Reference Include="Assembly-CSharp" />
-    <Reference Include="Assembly-CSharp-firstpass" />
-    <Reference Include="BoomlagoonJSON" />
-    <Reference Include="Facepunch.Console" />
-    <Reference Include="Facepunch.Network" />
-    <Reference Include="Facepunch.Rcon" />
-    <Reference Include="Facepunch.Sqlite" />
-    <Reference Include="Facepunch.System" />
-    <Reference Include="Facepunch.Unity" />
-    <Reference Include="Facepunch.UnityEngine" />
-    <Reference Include="Fleck" />
-    <Reference Include="mscorlib" />
-    <Reference Include="Rust.Clans" />
-    <Reference Include="Rust.Clans.Local" />
-    <Reference Include="Rust.Data" />
-    <Reference Include="Rust.Global" />
-    <Reference Include="Rust.Platform.Common" />
-    <Reference Include="System" />
-    <Reference Include="UnityEngine" />
-    <Reference Include="UnityEngine.CoreModule" />
-    <Reference Include="UnityEngine.PhysicsModule" />
-    <Reference Include="UnityEngine.TextRenderingModule" />
-    <Reference Include="UnityEngine.UI" />
-    <Reference Condition="'$(GamePlatform)' == 'linux'" Include="Facepunch.Steamworks.Posix" />
-    <Reference Condition="'$(GamePlatform)' != 'linux'" Include="Facepunch.Steamworks.Win64" />
-    <None Include="..\resources\icon.png" Pack="true" PackagePath="\" />
-    <None Remove="Bundle\**; dependencies\**; *.config; *.opj" />
+    <ProjectReference Include="$(OxideRoot)Oxide.Common\src\Oxide.Common.csproj" Private="false" />
+    <ProjectReference Include="$(OxideRoot)Oxide.Core\src\Oxide.Core.csproj" Private="false" />
+    <ProjectReference Include="$(OxideRoot)Oxide.CSharp\src\Oxide.CSharp.csproj" Private="false" />
+    <ProjectReference Include="$(OxideRoot)Oxide.Unity\src\Oxide.Unity.csproj" Private="false" />
   </ItemGroup>
   <ItemGroup>
-    <PatchedFiles Include="$(TargetDir)\Assembly-CSharp.dll; $(TargetDir)\Facepunch.Console.dll; $(TargetDir)\Facepunch.Network.dll; $(TargetDir)\Facepunch.Rcon.dll; $(TargetDir)\Facepunch.Sqlite.dll; $(TargetDir)\Facepunch.UnityEngine.dll; $(TargetDir)\Rust.Clans.Local.dll" />
+    <Reference Include="Assembly-CSharp" HintPath="$(RustManagedDir)Assembly-CSharp.dll" Private="false" />
+    <Reference Include="Assembly-CSharp-firstpass" HintPath="$(RustManagedDir)Assembly-CSharp-firstpass.dll" Private="false" />
+    <Reference Include="BoomlagoonJSON" HintPath="$(RustManagedDir)BoomlagoonJSON.dll" Private="false" />
+    <Reference Include="Facepunch.Console" HintPath="$(RustManagedDir)Facepunch.Console.dll" Private="false" />
+    <Reference Include="Facepunch.Network" HintPath="$(RustManagedDir)Facepunch.Network.dll" Private="false" />
+    <Reference Include="Facepunch.Rcon" HintPath="$(RustManagedDir)Facepunch.Rcon.dll" Private="false" />
+    <Reference Include="Facepunch.Sqlite" HintPath="$(RustManagedDir)Facepunch.Sqlite.dll" Private="false" />
+    <Reference Include="Facepunch.System" HintPath="$(RustManagedDir)Facepunch.System.dll" Private="false" />
+    <Reference Include="Facepunch.Unity" HintPath="$(RustManagedDir)Facepunch.Unity.dll" Private="false" />
+    <Reference Include="Facepunch.UnityEngine" HintPath="$(RustManagedDir)Facepunch.UnityEngine.dll" Private="false" />
+    <Reference Include="Facepunch.Steamworks.Win64" HintPath="$(RustManagedDir)Facepunch.Steamworks.Win64.dll" Private="false" />
+    <Reference Include="Fleck" HintPath="$(RustManagedDir)Fleck.dll" Private="false" />
+    <Reference Include="Rust.Clans" HintPath="$(RustManagedDir)Rust.Clans.dll" Private="false" />
+    <Reference Include="Rust.Clans.Local" HintPath="$(RustManagedDir)Rust.Clans.Local.dll" Private="false" />
+    <Reference Include="Rust.Data" HintPath="$(RustManagedDir)Rust.Data.dll" Private="false" />
+    <Reference Include="Rust.Global" HintPath="$(RustManagedDir)Rust.Global.dll" Private="false" />
+    <Reference Include="Rust.Platform.Common" HintPath="$(RustManagedDir)Rust.Platform.Common.dll" Private="false" />
+    <Reference Include="UnityEngine" HintPath="$(RustManagedDir)UnityEngine.dll" Private="false" />
+    <Reference Include="UnityEngine.CoreModule" HintPath="$(RustManagedDir)UnityEngine.CoreModule.dll" Private="false" />
+    <Reference Include="UnityEngine.PhysicsModule" HintPath="$(RustManagedDir)UnityEngine.PhysicsModule.dll" Private="false" />
+    <Reference Include="UnityEngine.TextRenderingModule" HintPath="$(RustManagedDir)UnityEngine.TextRenderingModule.dll" Private="false" />
+    <Reference Include="UnityEngine.UI" HintPath="$(RustManagedDir)UnityEngine.UI.dll" Private="false" />
+    <Reference Include="Newtonsoft.Json" HintPath="$(RustManagedDir)Newtonsoft.Json.dll" Private="false" />
+    <Reference Include="ZString" HintPath="$(RustManagedDir)ZString.dll" Private="false" />
+    <Reference Include="Mono.Cecil" HintPath="$(RustManagedDir)Mono.Cecil.dll" Private="false" />
+    <Reference Include="0Harmony" HintPath="$(RustServerDir)RustDedicated_Data\Managed\0Harmony.dll" Private="false" />
+  </ItemGroup>
+  <ItemGroup>
+    <PackageReference Include="Krafs.Publicizer" Version="2.3.0" PrivateAssets="all" />
+    <Publicize Include="Assembly-CSharp;Facepunch.Console;Facepunch.Network;Facepunch.Rcon;Facepunch.System;Facepunch.UnityEngine;Rust.Global;Rust.Data" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="..\resources\icon.png" Pack="true" PackagePath="\" />
   </ItemGroup>
   <Target Name="AddGitBranchMeta" BeforeTargets="CoreGenerateAssemblyInfo">
     <Exec Command="git name-rev --name-only HEAD" WorkingDirectory="$(MSBuildProjectDirectory)" ConsoleToMSBuild="True">
@@ -76,6 +64,4 @@
       </AssemblyAttribute>
     </ItemGroup>
   </Target>
-  <Import Project="Sdk.targets" Sdk="Microsoft.NET.Sdk" />
-  <Import Project="..\Game.targets" />
 </Project>

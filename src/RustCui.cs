@@ -1,4 +1,3 @@
-extern alias References;
 using System;
 using System.Collections.Generic;
 using System.Globalization;
@@ -7,15 +6,15 @@ using System.Text;
 using System.Threading;
 using Oxide.Core;
 using Oxide.Pooling;
-using References::Newtonsoft.Json;
-using References::Newtonsoft.Json.Converters;
-using References::Newtonsoft.Json.Linq;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Converters;
+using Newtonsoft.Json.Linq;
 using UnityEngine;
 using UnityEngine.UI;
 
 namespace Oxide.Game.Rust.Cui
 {
-    internal sealed class JsonArrayPool<T> : References::Newtonsoft.Json.IArrayPool<T>
+    internal sealed class JsonArrayPool<T> : Newtonsoft.Json.IArrayPool<T>
     {
         public static readonly JsonArrayPool<T> Shared = new JsonArrayPool<T>();
         private static readonly Pooling.IArrayPool<T> Provider = ArrayPool<T>.Custom(arrayMaxLength: 16384, arrayMaxPerPool: 1000);
