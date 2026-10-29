@@ -22,14 +22,14 @@
   </ItemGroup>
 
   <Target Name="Restore">
-    <MSBuild Projects="@(OxideProject)" Targets="Restore" Properties="$(BuildProperties);_Restore=true" />
+    <MSBuild Projects="@(OxideProject)" Targets="Restore" Properties="$(BuildProperties);_Restore=true" RemoveProperties="RuntimeIdentifier" />
     <MSBuild Projects="@(CompilerProject)" Targets="Restore" Properties="$(CompilerProperties);_Restore=true" />
   </Target>
 
   <Target Name="Build" DependsOnTargets="Bundle" />
 
   <Target Name="Bundle" DependsOnTargets="Restore">
-    <MSBuild Projects="@(OxideProject)" Targets="Build" Properties="$(BuildProperties)">
+    <MSBuild Projects="@(OxideProject)" Targets="Build" Properties="$(BuildProperties)" RemoveProperties="RuntimeIdentifier">
       <Output TaskParameter="TargetOutputs" ItemName="OxideAssembly" />
     </MSBuild>
     <MSBuild Projects="@(CompilerProject)" Targets="Publish" Properties="$(CompilerProperties)" />
