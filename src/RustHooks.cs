@@ -42,7 +42,12 @@ namespace Oxide.Game.Rust
         [HookMethod("IOnBaseCombatEntityHurt")]
         private object IOnBaseCombatEntityHurt(BaseCombatEntity entity, HitInfo hitInfo)
         {
-            return entity is BasePlayer ? null : Interface.CallHook("OnEntityTakeDamage", entity, hitInfo);
+            if (entity is BasePlayer || entity is LivestockAnimal)
+            {
+                return null;
+            }
+
+            return Interface.CallHook("OnEntityTakeDamage", entity, hitInfo);
         }
 
         /// <summary>
@@ -97,6 +102,30 @@ namespace Oxide.Game.Rust
             }
 
             return null;
+        }
+
+        /// <summary>
+        /// Called when a wildlife hazard (e.g. a snake) is about to start its hazard on a player
+        /// </summary>
+        /// <param name="hazard"></param>
+        /// <param name="player"></param>
+        /// <returns></returns>
+        [HookMethod("IOnNpcTarget")]
+        private object IOnNpcTarget(WildlifeHazard hazard, BasePlayer player)
+        {
+            return Interface.CallHook("OnNpcTarget", hazard, player) != null ? (object)false : null;
+        }
+
+        /// <summary>
+        /// Called when boat AI checks whether a player is a valid target
+        /// </summary>
+        /// <param name="boatAI"></param>
+        /// <param name="player"></param>
+        /// <returns></returns>
+        [HookMethod("IOnNpcTarget")]
+        private object IOnNpcTarget(BoatAI boatAI, BasePlayer player)
+        {
+            return Interface.CallHook("OnNpcTarget", boatAI, player) != null ? (object)false : null;
         }
 
         /// <summary>

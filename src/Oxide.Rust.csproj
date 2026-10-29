@@ -29,7 +29,8 @@
     <Reference Include="Facepunch.System" HintPath="$(RustManagedDir)Facepunch.System.dll" Private="false" />
     <Reference Include="Facepunch.Unity" HintPath="$(RustManagedDir)Facepunch.Unity.dll" Private="false" />
     <Reference Include="Facepunch.UnityEngine" HintPath="$(RustManagedDir)Facepunch.UnityEngine.dll" Private="false" />
-    <Reference Include="Facepunch.Steamworks.Win64" HintPath="$(RustManagedDir)Facepunch.Steamworks.Win64.dll" Private="false" />
+    <Reference Include="Facepunch.Steamworks.Win64" HintPath="$(RustManagedDir)Facepunch.Steamworks.Win64.dll" Private="false" Condition="Exists('$(RustManagedDir)Facepunch.Steamworks.Win64.dll')" />
+    <Reference Include="Facepunch.Steamworks.Posix" HintPath="$(RustManagedDir)Facepunch.Steamworks.Posix.dll" Private="false" Condition="Exists('$(RustManagedDir)Facepunch.Steamworks.Posix.dll')" />
     <Reference Include="Fleck" HintPath="$(RustManagedDir)Fleck.dll" Private="false" />
     <Reference Include="Rust.Clans" HintPath="$(RustManagedDir)Rust.Clans.dll" Private="false" />
     <Reference Include="Rust.Clans.Local" HintPath="$(RustManagedDir)Rust.Clans.Local.dll" Private="false" />
