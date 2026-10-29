@@ -52,8 +52,8 @@ namespace Oxide.Game.Rust.Libraries.Covalence
                         }
                         else
                         {
-                            WebClient webClient = new WebClient();
-                            IPAddress.TryParse(webClient.DownloadString("http://api.ipify.org"), out address);
+                            using System.Net.Http.HttpClient httpClient = new System.Net.Http.HttpClient { Timeout = TimeSpan.FromSeconds(10) };
+                            IPAddress.TryParse(httpClient.GetStringAsync("http://api.ipify.org").GetAwaiter().GetResult(), out address);
                             Interface.Oxide.LogInfo($"IP address from external API: {address}");
                         }
                     }

@@ -19,7 +19,7 @@ namespace Oxide.Game.Rust
         internal static VersionNumber AssemblyVersion = new VersionNumber(AssemblyName.Version.Major, AssemblyName.Version.Minor, AssemblyName.Version.Build);
         internal static string AssemblyAuthors = ((AssemblyCompanyAttribute)Attribute.GetCustomAttribute(Assembly, typeof(AssemblyCompanyAttribute), false)).Company;
 
-        private static readonly WebClient WebClient = new WebClient();
+        private static readonly System.Net.Http.HttpClient HttpClient = new System.Net.Http.HttpClient();
         private static VersionNumber LatestExtVersion = AssemblyVersion;
 
         /// <summary>
@@ -118,7 +118,7 @@ namespace Oxide.Game.Rust
             Manager.RegisterLibrary("Server", new Libraries.Server());
             Manager.RegisterPluginLoader(new RustPluginLoader());
 
-            WebClient.Headers["User-Agent"] = $"Oxide.Rust {Version}";
+            HttpClient.DefaultRequestHeaders.UserAgent.TryParseAdd($"Oxide.Rust/{Version}");
         }
 
         /// <summary>
@@ -173,7 +173,7 @@ namespace Oxide.Game.Rust
 
         private async Task<VersionNumber> GetLatestExtensionVersion()
         {
-            string json = await WebClient.DownloadStringTaskAsync(OxideRustReleaseListUrl);
+            string json = await HttpClient.GetStringAsync(OxideRustReleaseListUrl);
             if (string.IsNullOrWhiteSpace(json))
             {
                 throw new Exception("Could not retrieve latest Oxide.Rust version from GitHub API");
