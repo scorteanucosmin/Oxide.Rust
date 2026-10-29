@@ -1,0 +1,54 @@
+<Project DefaultTargets="Bundle">
+  <Import Project="Directory.Build.props" />
+  <PropertyGroup>
+    <Configuration Condition="'$(Configuration)' == ''">Release</Configuration>
+    <RuntimeIdentifier Condition="'$(RuntimeIdentifier)' == '' And $([MSBuild]::IsOSPlatform('Windows'))">win-x64</RuntimeIdentifier>
+    <RuntimeIdentifier Condition="'$(RuntimeIdentifier)' == ''">linux-x64</RuntimeIdentifier>
+    <BundleDir>$(MSBuildThisFileDirectory)bin\Bundle\$(RuntimeIdentifier)\</BundleDir>
+    <CompilerPublishDir>$(MSBuildThisFileDirectory)bin\Compiler\$(RuntimeIdentifier)\</CompilerPublishDir>
+    <ManagedBundleDir>$(BundleDir)RustDedicated_Data\Managed\</ManagedBundleDir>
+    <BuildProperties>Configuration=$(Configuration);RustServerDir=$(RustServerDir)</BuildProperties>
+    <CompilerProperties>$(BuildProperties);RuntimeIdentifier=$(RuntimeIdentifier);SelfContained=true;PublishSingleFile=true;PublishReadyToRun=true;IncludeNativeLibrariesForSelfExtract=true;EnableCompressionInSingleFile=true;PublishDir=$(CompilerPublishDir)</CompilerProperties>
+  </PropertyGroup>
+  <ItemGroup>
+    <OxideProject Include="$(OxideRoot)Oxide.Common\src\Oxide.Common.csproj" />
+    <OxideProject Include="$(OxideRoot)Oxide.Core\src\Oxide.Core.csproj" />
+    <OxideProject Include="$(OxideRoot)Oxide.CSharp\src\Oxide.CSharp.csproj" />
+    <OxideProject Include="$(OxideRoot)Oxide.Unity\src\Oxide.Unity.csproj" />
+    <OxideProject Include="$(OxideRoot)Oxide.Rust\src\Oxide.Rust.csproj" />
+    <OxideProject Include="$(OxideRoot)Oxide.MySql\src\Oxide.MySql.csproj" />
+    <OxideProject Include="$(OxideRoot)Oxide.SQLite\src\Oxide.SQLite.csproj" />
+    <CompilerProject Include="$(OxideRoot)Oxide.Compiler\src\Oxide.Compiler.csproj" />
+  </ItemGroup>
+
+  <Target Name="Restore">
+    <MSBuild Projects="@(OxideProject)" Targets="Restore" Properties="$(BuildProperties);_Restore=true" />
+    <MSBuild Projects="@(CompilerProject)" Targets="Restore" Properties="$(CompilerProperties);_Restore=true" />
+  </Target>
+
+  <Target Name="Build" DependsOnTargets="Bundle" />
+
+  <Target Name="Bundle" DependsOnTargets="Restore">
+    <MSBuild Projects="@(OxideProject)" Targets="Build" Properties="$(BuildProperties)">
+      <Output TaskParameter="TargetOutputs" ItemName="OxideAssembly" />
+    </MSBuild>
+    <MSBuild Projects="@(CompilerProject)" Targets="Publish" Properties="$(CompilerProperties)" />
+
+    <ItemGroup>
+      <_OutputDir Include="@(OxideAssembly->'%(RootDir)%(Directory)')" />
+      <_Managed Include="%(_OutputDir.Identity)*.dll" />
+      <_Native Include="%(_OutputDir.Identity)runtimes\$(RuntimeIdentifier)\native\*" />
+      <_Compiler Include="$(CompilerPublishDir)Oxide.Compiler*" Exclude="$(CompilerPublishDir)*.pdb" />
+    </ItemGroup>
+
+    <RemoveDir Directories="$(BundleDir)" />
+    <Copy SourceFiles="@(_Managed)" DestinationFolder="$(ManagedBundleDir)" SkipUnchangedFiles="false" />
+    <Copy SourceFiles="@(_Native)" DestinationFolder="$(ManagedBundleDir)x64" />
+    <Copy SourceFiles="@(_Compiler)" DestinationFolder="$(BundleDir)" />
+    <Message Importance="high" Text="Oxide bundle ($(RuntimeIdentifier)): $(BundleDir)" />
+  </Target>
+
+  <Target Name="Clean">
+    <RemoveDir Directories="$(BundleDir)" />
+  </Target>
+</Project>

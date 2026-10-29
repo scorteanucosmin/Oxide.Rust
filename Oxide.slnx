@@ -1,0 +1,16 @@
+<Solution>
+  <Folder Name="/Oxide/">
+    <Project Path="../Oxide.Common/src/Oxide.Common.csproj" />
+    <Project Path="../Oxide.Core/src/Oxide.Core.csproj" />
+    <Project Path="../Oxide.CSharp/src/Oxide.CSharp.csproj" />
+    <Project Path="../Oxide.Compiler/src/Oxide.Compiler.csproj" />
+    <Project Path="../Oxide.Unity/src/Oxide.Unity.csproj" />
+    <Project Path="../Oxide.MySql/src/Oxide.MySql.csproj" />
+    <Project Path="../Oxide.SQLite/src/Oxide.SQLite.csproj" />
+  </Folder>
+  <Folder Name="/Solution Items/">
+    <File Path="Directory.Build.props" />
+    <File Path="Oxide.Bundle.proj" />
+  </Folder>
+  <Project Path="src/Oxide.Rust.csproj" />
+</Solution>
