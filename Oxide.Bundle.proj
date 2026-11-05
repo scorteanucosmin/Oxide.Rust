@@ -15,7 +15,7 @@
     <OxideProject Include="$(OxideRoot)Oxide.Core\src\Oxide.Core.csproj" />
     <OxideProject Include="$(OxideRoot)Oxide.CSharp\src\Oxide.CSharp.csproj" />
     <OxideProject Include="$(OxideRoot)Oxide.Unity\src\Oxide.Unity.csproj" />
-    <OxideProject Include="$(OxideRoot)Oxide.Rust\src\Oxide.Rust.csproj" />
+    <OxideProject Include="$(OxideRoot)Oxide.Rust\net10\Oxide.Rust.csproj" />
     <OxideProject Include="$(OxideRoot)Oxide.MySql\src\Oxide.MySql.csproj" />
     <OxideProject Include="$(OxideRoot)Oxide.SQLite\src\Oxide.SQLite.csproj" />
     <CompilerProject Include="$(OxideRoot)Oxide.Compiler\src\Oxide.Compiler.csproj" />

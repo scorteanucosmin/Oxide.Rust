@@ -1,0 +1,86 @@
+<!-- The .NET 10 build of Oxide.Rust. It compiles upstream's sources in ../src unchanged; upstream's own project
+     (../src/Oxide.Rust.csproj, .NET Framework, NuGet packages, Game.targets and Steam.ps1) is left as upstream has it and
+     is not built, so merges from OxideMod/Oxide.Rust do not conflict with this port. -->
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <Version>2.0.0</Version>
+    <AssemblyName>Oxide.Rust</AssemblyName>
+    <RootNamespace>Oxide.Game.Rust</RootNamespace>
+    <Authors>Oxide Team and Contributors</Authors>
+    <Copyright>(c) 2013-$([System.DateTime]::Now.Year) $(Authors)</Copyright>
+    <Description>Rust extension for the Oxide modding framework</Description>
+    <RepositoryUrl>https://github.com/OxideMod/Oxide.Rust</RepositoryUrl>
+    <PackageIconUrl>icon.png</PackageIconUrl>
+    <PackageLicenseExpression>MIT</PackageLicenseExpression>
+    <PackageProjectUrl>$(RepositoryUrl)</PackageProjectUrl>
+    <Nullable>enable</Nullable>
+    <EnableDefaultCompileItems>false</EnableDefaultCompileItems>
+    <!-- WebClient is obsolete on .NET but still works; upstream uses it for the version check and the IP lookup. -->
+    <NoWarn>$(NoWarn);SYSLIB0014</NoWarn>
+  </PropertyGroup>
+  <ItemGroup>
+    <Compile Include="..\src\**\*.cs" Exclude="..\src\bin\**;..\src\obj\**" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="$(OxideRoot)Oxide.Common\src\Oxide.Common.csproj" Private="false" />
+    <ProjectReference Include="$(OxideRoot)Oxide.Core\src\Oxide.Core.csproj" Private="false" />
+    <ProjectReference Include="$(OxideRoot)Oxide.CSharp\src\Oxide.CSharp.csproj" Private="false" />
+    <ProjectReference Include="$(OxideRoot)Oxide.Unity\src\Oxide.Unity.csproj" Private="false" />
+  </ItemGroup>
+  <ItemGroup>
+    <Reference Include="Assembly-CSharp" HintPath="$(RustManagedDir)Assembly-CSharp.dll" Private="false" />
+    <Reference Include="Assembly-CSharp-firstpass" HintPath="$(RustManagedDir)Assembly-CSharp-firstpass.dll" Private="false" />
+    <Reference Include="BoomlagoonJSON" HintPath="$(RustManagedDir)BoomlagoonJSON.dll" Private="false" />
+    <Reference Include="Facepunch.Console" HintPath="$(RustManagedDir)Facepunch.Console.dll" Private="false" />
+    <Reference Include="Facepunch.Network" HintPath="$(RustManagedDir)Facepunch.Network.dll" Private="false" />
+    <Reference Include="Facepunch.Rcon" HintPath="$(RustManagedDir)Facepunch.Rcon.dll" Private="false" />
+    <Reference Include="Facepunch.Sqlite" HintPath="$(RustManagedDir)Facepunch.Sqlite.dll" Private="false" />
+    <Reference Include="Facepunch.System" HintPath="$(RustManagedDir)Facepunch.System.dll" Private="false" />
+    <Reference Include="Facepunch.Unity" HintPath="$(RustManagedDir)Facepunch.Unity.dll" Private="false" />
+    <Reference Include="Facepunch.UnityEngine" HintPath="$(RustManagedDir)Facepunch.UnityEngine.dll" Private="false" />
+    <Reference Include="Facepunch.Steamworks.Win64" HintPath="$(RustManagedDir)Facepunch.Steamworks.Win64.dll" Private="false" Condition="Exists('$(RustManagedDir)Facepunch.Steamworks.Win64.dll')" />
+    <Reference Include="Facepunch.Steamworks.Posix" HintPath="$(RustManagedDir)Facepunch.Steamworks.Posix.dll" Private="false" Condition="Exists('$(RustManagedDir)Facepunch.Steamworks.Posix.dll')" />
+    <Reference Include="Fleck" HintPath="$(RustManagedDir)Fleck.dll" Private="false" />
+    <Reference Include="Rust.Clans" HintPath="$(RustManagedDir)Rust.Clans.dll" Private="false" />
+    <Reference Include="Rust.Clans.Local" HintPath="$(RustManagedDir)Rust.Clans.Local.dll" Private="false" />
+    <Reference Include="Rust.Data" HintPath="$(RustManagedDir)Rust.Data.dll" Private="false" />
+    <Reference Include="Rust.Global" HintPath="$(RustManagedDir)Rust.Global.dll" Private="false" />
+    <Reference Include="Rust.Platform.Common" HintPath="$(RustManagedDir)Rust.Platform.Common.dll" Private="false" />
+    <Reference Include="UnityEngine" HintPath="$(RustManagedDir)UnityEngine.dll" Private="false" />
+    <Reference Include="UnityEngine.CoreModule" HintPath="$(RustManagedDir)UnityEngine.CoreModule.dll" Private="false" />
+    <Reference Include="UnityEngine.PhysicsModule" HintPath="$(RustManagedDir)UnityEngine.PhysicsModule.dll" Private="false" />
+    <Reference Include="UnityEngine.TextRenderingModule" HintPath="$(RustManagedDir)UnityEngine.TextRenderingModule.dll" Private="false" />
+    <Reference Include="UnityEngine.UI" HintPath="$(RustManagedDir)UnityEngine.UI.dll" Private="false" />
+    <Reference Include="Newtonsoft.Json" HintPath="$(RustManagedDir)Newtonsoft.Json.dll" Private="false" />
+    <Reference Include="ZString" HintPath="$(RustManagedDir)ZString.dll" Private="false" />
+    <Reference Include="Mono.Cecil" HintPath="$(RustManagedDir)Mono.Cecil.dll" Private="false" />
+    <Reference Include="0Harmony" HintPath="$(RustServerDir)RustDedicated_Data\Managed\0Harmony.dll" Private="false" />
+  </ItemGroup>
+  <ItemGroup>
+    <PackageReference Include="Krafs.Publicizer" Version="2.3.0" PrivateAssets="all" />
+    <Publicize Include="Assembly-CSharp;Facepunch.Console;Facepunch.Network;Facepunch.Rcon;Facepunch.System;Facepunch.UnityEngine;Rust.Global;Rust.Data" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="..\resources\icon.png" Pack="true" PackagePath="\" />
+  </ItemGroup>
+  <!-- Upstream's code reaches Newtonsoft.Json and protobuf-net through the References alias (on Mono they live in
+       Oxide.References); give those assemblies the alias as well, as upstream's Game.targets does for Oxide.References. -->
+  <Target Name="AddReferencesAlias" AfterTargets="ResolveAssemblyReferences" BeforeTargets="FindReferenceAssembliesForReferences">
+    <ItemGroup>
+      <ReferencePath Condition="'%(FileName)' == 'Newtonsoft.Json' Or '%(FileName)' == 'protobuf-net' Or '%(FileName)' == 'protobuf-net.Core'">
+        <Aliases>global,References</Aliases>
+      </ReferencePath>
+    </ItemGroup>
+  </Target>
+  <Target Name="AddGitBranchMeta" BeforeTargets="CoreGenerateAssemblyInfo">
+    <Exec Command="git name-rev --name-only HEAD" WorkingDirectory="$(MSBuildProjectDirectory)" ConsoleToMSBuild="True">
+      <Output TaskParameter="ConsoleOutput" PropertyName="GitBranch" />
+    </Exec>
+    <ItemGroup>
+      <AssemblyAttribute Include="System.Reflection.AssemblyMetadataAttribute" Condition="$(GitBranch) != ''">
+        <_Parameter1>GitBranch</_Parameter1>
+        <_Parameter2>$(GitBranch)</_Parameter2>
+      </AssemblyAttribute>
+    </ItemGroup>
+  </Target>
+</Project>
